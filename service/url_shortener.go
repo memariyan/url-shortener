@@ -9,7 +9,6 @@ const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 var storage = make(map[string]string)
 
 func ConvertURL(url string) string {
-	//TODO: mix the code with handler
 	pathKey := getNewRandomPathKey()
 	storage[pathKey] = url
 

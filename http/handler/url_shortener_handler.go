@@ -1,17 +1,17 @@
 package handler
 
 import (
-	"encoding/json"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
-	"net/http"
 
 	"url-shortner/http/dto"
 	"url-shortner/service"
 )
 
 func Convert(c echo.Context) error {
-	request, err := parseRequestAndValidate(c)
+	request, err := getRequestInfo(c)
 	if err != nil {
 		return err
 	}
@@ -22,21 +22,19 @@ func Convert(c echo.Context) error {
 	})
 }
 
-func parseRequestAndValidate(c echo.Context) (*dto.URLShortenerRequest, error) {
-
-	//todo : binding
+func getRequestInfo(c echo.Context) (*dto.URLShortenerRequest, error) {
 	request := dto.URLShortenerRequest{}
 	defer c.Request().Body.Close()
 
-	err := json.NewDecoder(c.Request().Body).Decode(&request)
-	if err != nil {
-		log.Debugln("Failed reading the request body %s", err)
-		return nil, echo.NewHTTPError(http.StatusBadRequest, "Failed reading the request body!")
+	err := c.Bind(&request)
+	if err == nil {
+		err = request.Validate()
 	}
-
-	if len(request.URL) == 0 {
-		return nil, echo.NewHTTPError(http.StatusBadRequest, "URL is required")
+	if err != nil {
+		log.Errorln("Failed parse the request body %s", err)
+		return nil, echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	log.Debugln("request body : ", request)
+
 	return &request, nil
 }
