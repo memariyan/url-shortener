@@ -9,8 +9,10 @@ const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 var storage = make(map[string]string)
 
 func ConvertURL(url string) string {
+	//TODO: mix the code with handler
 	pathKey := getNewRandomPathKey()
 	storage[pathKey] = url
+
 	return BaseServerAddress + "/" + pathKey
 }
 
@@ -23,6 +25,7 @@ func getNewRandomPathKey() string {
 	if len(storage[newKey]) == 0 {
 		return newKey
 	}
+
 	return getNewRandomPathKey()
 }
 
@@ -31,5 +34,6 @@ func generateRandStringBytes(n int) string {
 	for i := range b {
 		b[i] = Letters[rand.Intn(len(Letters))]
 	}
+
 	return string(b)
 }

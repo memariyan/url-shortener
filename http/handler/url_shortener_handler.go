@@ -5,12 +5,12 @@ import (
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+
 	"url-shortner/http/dto"
 	"url-shortner/service"
 )
 
 func Convert(c echo.Context) error {
-
 	request, err := parseRequestAndValidate(c)
 	if err != nil {
 		return err
@@ -24,6 +24,7 @@ func Convert(c echo.Context) error {
 
 func parseRequestAndValidate(c echo.Context) (*dto.URLShortenerRequest, error) {
 
+	//todo : binding
 	request := dto.URLShortenerRequest{}
 	defer c.Request().Body.Close()
 

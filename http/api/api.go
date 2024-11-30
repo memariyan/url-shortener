@@ -6,8 +6,6 @@ import (
 )
 
 func MainGroup(e *echo.Echo) {
-
 	e.POST("/convert", handler.Convert)
 	e.GET("/:pathKey", handler.Redirect)
-
 }
