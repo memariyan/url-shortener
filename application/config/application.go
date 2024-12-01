@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var Application Config
+
 type Config struct {
 	Server Server `mapstructure:"server"`
 	MySQL  MySQL  `mapstructure:"mysql"`
@@ -23,10 +25,12 @@ type MySQL struct {
 	DB       string `mapstructure:"db"`
 }
 
-var ApplicationConfig Config
+func init() {
+	ReadConfig()
+}
 
 func ReadConfig() *Config {
-	ApplicationConfig = Config{}
+	Application = Config{}
 	viper.SetConfigFile("config.yaml")
 
 	err := viper.ReadInConfig()
@@ -34,9 +38,9 @@ func ReadConfig() *Config {
 		log.Fatal("Can't find the file .env : ", err)
 	}
 
-	err = viper.Unmarshal(&ApplicationConfig)
+	err = viper.Unmarshal(&Application)
 	if err != nil {
 		log.Fatal("Environment can't be loaded: ", err)
 	}
-	return &ApplicationConfig
+	return &Application
 }

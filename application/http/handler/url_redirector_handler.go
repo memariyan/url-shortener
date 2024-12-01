@@ -4,8 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-
-	"url-shortner/service"
+	"url-shortner/application/service"
 )
 
 func Redirect(c echo.Context) error {

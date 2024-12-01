@@ -5,15 +5,15 @@ import (
 	"strconv"
 	"strings"
 
-	"url-shortner/config"
-	"url-shortner/model"
-	"url-shortner/repository"
+	"url-shortner/application/config"
+	"url-shortner/application/model"
+	"url-shortner/application/repository"
 )
 
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func ConvertURL(url string) (string, error) {
-	serverAddress := config.ApplicationConfig.Server.Address + ":" + strconv.Itoa(config.ApplicationConfig.Server.Port)
+	serverAddress := config.Application.Server.Address + ":" + strconv.Itoa(config.Application.Server.Port)
 	var data *model.URLData
 
 	data = repository.GetByOriginalUrl(url)

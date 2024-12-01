@@ -1,16 +1,19 @@
-package config
+package database
 
 import (
 	"fmt"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"url-shortner/application/config"
 )
 
 var DB *gorm.DB
 
-func DatabaseConnection(config *MySQL) *gorm.DB {
-
+func Connect(config *config.MySQL) *gorm.DB {
+	if DB != nil {
+		return DB
+	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.Username, config.Password, config.Host, config.Port, config.DB)
 
