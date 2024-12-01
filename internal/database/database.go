@@ -5,7 +5,8 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"url-shortner/application/config"
+
+	"url-shortner/internal/config"
 )
 
 var DB *gorm.DB

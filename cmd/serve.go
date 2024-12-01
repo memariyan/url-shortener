@@ -4,9 +4,9 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"url-shortner/application/config"
-	"url-shortner/application/database"
-	"url-shortner/application/http"
+	"url-shortner/internal/config"
+	"url-shortner/internal/database"
+	"url-shortner/internal/http"
 )
 
 var rootCmd = &cobra.Command{

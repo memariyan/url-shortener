@@ -5,8 +5,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"url-shortner/application/config"
-	"url-shortner/application/database"
+	"url-shortner/internal/config"
+	"url-shortner/internal/database"
 )
 
 var migrateCmd = &cobra.Command{
@@ -14,7 +14,6 @@ var migrateCmd = &cobra.Command{
 	Short: "db init",
 	Long:  `Initialize the database according to the sql script`,
 	Run: func(cmd *cobra.Command, args []string) {
-
 		// connect to database
 		database.Connect(&config.Application.MySQL)
 

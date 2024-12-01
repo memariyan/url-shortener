@@ -2,7 +2,7 @@ package http
 
 import (
 	"github.com/labstack/echo/v4"
-	handler2 "url-shortner/application/http/handler"
+	handler2 "url-shortner/internal/http/handler"
 )
 
 func MainGroup(e *echo.Echo) {

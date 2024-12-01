@@ -2,8 +2,9 @@ package repository
 
 import (
 	log "github.com/sirupsen/logrus"
-	"url-shortner/application/database"
-	"url-shortner/application/model"
+
+	"url-shortner/internal/database"
+	"url-shortner/internal/model"
 )
 
 func Save(data *model.URLData) error {

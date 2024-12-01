@@ -5,8 +5,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
-	dto2 "url-shortner/application/http/dto"
-	"url-shortner/application/service"
+	dto2 "url-shortner/internal/http/dto"
+
+	"url-shortner/internal/service"
 )
 
 func Convert(c echo.Context) error {

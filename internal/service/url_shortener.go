@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	"url-shortner/application/config"
-	"url-shortner/application/model"
-	"url-shortner/application/repository"
+	"url-shortner/internal/config"
+	"url-shortner/internal/model"
+	"url-shortner/internal/repository"
 )
 
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
