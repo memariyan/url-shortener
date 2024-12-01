@@ -10,6 +10,7 @@ var Application Config
 type Config struct {
 	Server Server `mapstructure:"server"`
 	MySQL  MySQL  `mapstructure:"mysql"`
+	Redis  Redis  `mapstructure:"redis"`
 }
 
 type Server struct {
@@ -23,6 +24,11 @@ type MySQL struct {
 	Username string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
 	DB       string `mapstructure:"db"`
+}
+
+type Redis struct {
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
 }
 
 func init() {

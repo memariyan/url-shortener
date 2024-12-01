@@ -9,11 +9,11 @@ import (
 	"url-shortner/internal/config"
 )
 
-var DB *gorm.DB
+var MySQL *gorm.DB
 
-func Connect(config *config.MySQL) *gorm.DB {
-	if DB != nil {
-		return DB
+func ConnectDB(config *config.MySQL) *gorm.DB {
+	if MySQL != nil {
+		return MySQL
 	}
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.Username, config.Password, config.Host, config.Port, config.DB)
@@ -22,7 +22,7 @@ func Connect(config *config.MySQL) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	DB = db
+	MySQL = db
 
 	return db
 }

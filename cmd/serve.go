@@ -19,8 +19,9 @@ var serveCmd = &cobra.Command{
 	Short: "run",
 	Long:  `Run the server on the defined port`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// connect to database
-		database.Connect(&config.Application.MySQL)
+		// connect to databases
+		database.ConnectDB(&config.Application.MySQL)
+		database.ConnectRedis(&config.Application.Redis)
 
 		// run the server
 		port, _ := rootCmd.Flags().GetInt("port")

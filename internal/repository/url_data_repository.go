@@ -1,36 +1,58 @@
 package repository
 
 import (
+	"context"
+
 	log "github.com/sirupsen/logrus"
 
 	"url-shortner/internal/database"
 	"url-shortner/internal/model"
 )
 
-func Save(data *model.URLData) error {
-	err := database.DB.Save(data).Error
+var ctx = context.Background()
 
+func Save(data *model.URLData) error {
+	err := database.MySQL.Save(data).Error
 	if err != nil {
 		log.Errorln("error in storing in database: %s", err.Error())
 		return err
 	}
+
 	return nil
 }
 
 func GetByKey(key string) *model.URLData {
-	var data model.URLData
-	result := database.DB.First(&data, "`key` = ?", key)
-	if result != nil {
-		return &data
+	var data *model.URLData
+	if data = readFromCache(key); data != nil {
+		return data
+	}
+	if result := database.MySQL.First(&data, "`key` = ?", key); result != nil {
+		writeOnCache(key, data)
+		return data
 	} else {
 		return nil
 	}
 }
 
+func readFromCache(key string) *model.URLData {
+	var result model.URLData
+	bytes, _ := database.Redis.Get(ctx, key).Bytes()
+	if err := result.UnmarshalBinary(bytes); err == nil {
+		return &result
+	}
+
+	return nil
+}
+
+func writeOnCache(key string, data *model.URLData) {
+	if err := database.Redis.Set(ctx, key, data, 0).Err(); err != nil {
+		log.Errorln(err)
+	}
+}
+
 func GetByOriginalUrl(originalUrl string) *model.URLData {
 	var data model.URLData
-	result := database.DB.First(&data, "`original_url` = ?", originalUrl)
-	if result != nil {
+	if result := database.MySQL.First(&data, "`original_url` = ?", originalUrl); result != nil {
 		return &data
 	} else {
 		return nil
