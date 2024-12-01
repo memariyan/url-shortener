@@ -1,9 +1,9 @@
 package dto
 
-type ValidationError struct {
+type Error struct {
 	Message string `json:"message"`
 }
 
-func (e *ValidationError) Error() string {
+func (e *Error) Error() string {
 	return e.Message
 }

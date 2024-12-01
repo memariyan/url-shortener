@@ -6,7 +6,7 @@ type URLShortenerRequest struct {
 
 func (u *URLShortenerRequest) Validate() error {
 	if len(u.URL) == 0 {
-		return &ValidationError{"URL is required"}
+		return &Error{"URL is required"}
 	}
 	return nil
 }

@@ -1,31 +1,45 @@
 package service
 
-import "math/rand"
+import (
+	"math/rand"
+	"strings"
 
-const BaseServerAddress = "http://localhost:8000"
+	"url-shortner/model"
+	"url-shortner/repository"
+)
+
+const BaseServerAddress = "http://localhost:8001"
 
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-var storage = make(map[string]string)
+func ConvertURL(url string) (string, error) {
+	var data *model.URLData
 
-func ConvertURL(url string) string {
-	pathKey := getNewRandomPathKey()
-	storage[pathKey] = url
+	data = repository.GetByOriginalUrl(url)
+	if len(data.Key) != 0 {
+		return BaseServerAddress + "/" + data.Key, nil
+	}
 
-	return BaseServerAddress + "/" + pathKey
+	newKey := generateRandStringBytes(6)
+	data = &model.URLData{OriginalUrl: url, Key: newKey}
+	err := repository.Save(data)
+	if err != nil {
+		if strings.Contains(err.Error(), "Duplicate entry") {
+			return ConvertURL(url)
+		}
+		return "", err
+	}
+
+	return BaseServerAddress + "/" + newKey, nil
 }
 
 func GetOriginalURL(pathKey string) string {
-	return storage[pathKey]
-}
-
-func getNewRandomPathKey() string {
-	newKey := generateRandStringBytes(6)
-	if len(storage[newKey]) == 0 {
-		return newKey
+	data := repository.GetByKey(pathKey)
+	if data == nil {
+		return ""
 	}
 
-	return getNewRandomPathKey()
+	return data.OriginalUrl
 }
 
 func generateRandStringBytes(n int) string {
