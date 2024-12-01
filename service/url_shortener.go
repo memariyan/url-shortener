@@ -2,22 +2,23 @@ package service
 
 import (
 	"math/rand"
+	"strconv"
 	"strings"
 
+	"url-shortner/config"
 	"url-shortner/model"
 	"url-shortner/repository"
 )
 
-const BaseServerAddress = "http://localhost:8001"
-
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 func ConvertURL(url string) (string, error) {
+	serverAddress := config.ApplicationConfig.Server.Address + ":" + strconv.Itoa(config.ApplicationConfig.Server.Port)
 	var data *model.URLData
 
 	data = repository.GetByOriginalUrl(url)
 	if len(data.Key) != 0 {
-		return BaseServerAddress + "/" + data.Key, nil
+		return serverAddress + "/" + data.Key, nil
 	}
 
 	newKey := generateRandStringBytes(6)
@@ -30,7 +31,7 @@ func ConvertURL(url string) (string, error) {
 		return "", err
 	}
 
-	return BaseServerAddress + "/" + newKey, nil
+	return serverAddress + "/" + newKey, nil
 }
 
 func GetOriginalURL(pathKey string) string {

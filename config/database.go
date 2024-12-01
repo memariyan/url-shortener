@@ -1,29 +1,24 @@
 package config
 
 import (
+	"fmt"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-const (
-	host     = "localhost"
-	port     = 3306
-	user     = "root"
-	password = "root"
-	dbName   = "url_shortener"
-)
+var DB *gorm.DB
 
-func DatabaseConnection() *gorm.DB {
+func DatabaseConnection(config *MySQL) *gorm.DB {
 
-	dsn := "root:root@tcp(127.0.0.1:3306)/url_shortener?charset=utf8mb4&parseTime=True&loc=Local"
-
-	/*	sqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbName)*/
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		config.Username, config.Password, config.Host, config.Port, config.DB)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
+	DB = db
 
 	return db
 }
