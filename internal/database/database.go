@@ -22,6 +22,7 @@ func ConnectDB(config *config.MySQL) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
+
 	MySQL = db
 
 	return db

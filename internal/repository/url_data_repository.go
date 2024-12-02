@@ -54,7 +54,7 @@ func GetByOriginalUrl(originalUrl string) *model.URLData {
 	var data model.URLData
 	if result := database.MySQL.First(&data, "`original_url` = ?", originalUrl); result != nil {
 		return &data
-	} else {
-		return nil
 	}
+
+	return nil
 }

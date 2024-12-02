@@ -18,5 +18,4 @@ func Redirect(c echo.Context) error {
 	} else {
 		return c.NoContent(http.StatusNotFound)
 	}
-
 }

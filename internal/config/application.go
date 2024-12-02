@@ -38,7 +38,6 @@ func init() {
 func ReadConfig() *Config {
 	Application = Config{}
 	viper.SetConfigFile("config.yaml")
-
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatal("Can't find the file .env : ", err)
@@ -48,5 +47,6 @@ func ReadConfig() *Config {
 	if err != nil {
 		log.Fatal("Environment can't be loaded: ", err)
 	}
+
 	return &Application
 }

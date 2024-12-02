@@ -32,6 +32,5 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(serveCmd)
 	rootCmd.PersistentFlags().IntP("port", "p", config.Application.Server.Port, "the port of server")
 }
