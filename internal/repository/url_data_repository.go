@@ -9,19 +9,30 @@ import (
 	"url-shortner/internal/model"
 )
 
+type URLDataRepository interface {
+	Save(data *model.URLData) error
+
+	GetByKey(key string) *model.URLData
+
+	GetByOriginalUrl(originalUrl string) *model.URLData
+}
+
+type URLDataRepositoryImpl struct {
+}
+
 var ctx = context.Background()
 
-func Save(data *model.URLData) error {
+func (r URLDataRepositoryImpl) Save(data *model.URLData) error {
 	err := database.MySQL.Save(data).Error
 	if err != nil {
-		log.Errorln("error in storing in database: %s", err.Error())
+		log.Errorln("error in storing in database:", err.Error())
 		return err
 	}
 
 	return nil
 }
 
-func GetByKey(key string) *model.URLData {
+func (r URLDataRepositoryImpl) GetByKey(key string) *model.URLData {
 	var data *model.URLData
 	if data = readFromCache(key); data != nil {
 		return data
@@ -50,7 +61,7 @@ func writeOnCache(key string, data *model.URLData) {
 	}
 }
 
-func GetByOriginalUrl(originalUrl string) *model.URLData {
+func (r URLDataRepositoryImpl) GetByOriginalUrl(originalUrl string) *model.URLData {
 	var data model.URLData
 	if result := database.MySQL.First(&data, "`original_url` = ?", originalUrl); result != nil {
 		return &data

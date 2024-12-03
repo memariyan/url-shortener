@@ -14,7 +14,7 @@ var migrateCmd = &cobra.Command{
 	Short: "db init",
 	Long:  `Initialize the database according to the sql script`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// connect to database
+		config.ReadConfig()
 		database.ConnectDB(&config.Application.MySQL)
 		sqlQuery, err := os.ReadFile("./scripts/init_db.sql")
 		if err != nil {

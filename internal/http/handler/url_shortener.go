@@ -13,7 +13,7 @@ import (
 func Convert(c echo.Context) error {
 	request, err := getRequestInfo(c)
 	if err != nil {
-		log.Errorln("Failed parse the request body %s", err)
+		log.Errorln("Failed parse the request body ", err)
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
@@ -25,6 +25,18 @@ func Convert(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.URLShortenerResponse{
 		Result: result,
 	})
+}
+
+func Redirect(c echo.Context) error {
+
+	pathKey := c.Param("pathKey")
+	redirectUrl := service.GetOriginalURL(pathKey)
+	if len(redirectUrl) != 0 {
+		c.Response().Header().Set("Location", redirectUrl)
+		return c.NoContent(http.StatusMovedPermanently)
+	} else {
+		return c.NoContent(http.StatusNotFound)
+	}
 }
 
 func getRequestInfo(c echo.Context) (*dto.URLShortenerRequest, error) {

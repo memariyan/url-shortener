@@ -31,10 +31,6 @@ type Redis struct {
 	Port int    `mapstructure:"port"`
 }
 
-func init() {
-	ReadConfig()
-}
-
 func ReadConfig() *Config {
 	Application = Config{}
 	viper.SetConfigFile("config.yaml")

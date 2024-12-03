@@ -12,18 +12,21 @@ import (
 
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+var repo repository.URLDataRepository = repository.URLDataRepositoryImpl{}
+var configuration = &config.Application
+
 func ConvertURL(url string) (string, error) {
-	serverAddress := config.Application.Server.Address + ":" + strconv.Itoa(config.Application.Server.Port)
+	serverAddress := configuration.Server.Address + ":" + strconv.Itoa(configuration.Server.Port)
 	var data *model.URLData
 
-	data = repository.GetByOriginalUrl(url)
+	data = repo.GetByOriginalUrl(url)
 	if len(data.Key) != 0 {
 		return serverAddress + "/" + data.Key, nil
 	}
 
 	newKey := generateRandStringBytes(6)
 	data = &model.URLData{OriginalUrl: url, Key: newKey}
-	err := repository.Save(data)
+	err := repo.Save(data)
 	if err != nil {
 		if strings.Contains(err.Error(), "Duplicate entry") {
 			return ConvertURL(url)
@@ -35,7 +38,7 @@ func ConvertURL(url string) (string, error) {
 }
 
 func GetOriginalURL(pathKey string) string {
-	data := repository.GetByKey(pathKey)
+	data := repo.GetByKey(pathKey)
 	if data == nil {
 		return ""
 	}
