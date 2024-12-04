@@ -20,8 +20,8 @@ var serveCmd = &cobra.Command{
 	Long:  `Run the server on the defined port`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ReadConfig()
-		database.ConnectDB(&config.Application.MySQL)
-		database.ConnectRedis(&config.Application.Redis)
+		database.ConnectDB(&config.Get().MySQL)
+		database.ConnectRedis(&config.Get().Redis)
 
 		// run the server
 		port, _ := rootCmd.Flags().GetInt("port")
@@ -32,5 +32,5 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().IntP("port", "p", config.Application.Server.Port, "the port of server")
+	rootCmd.PersistentFlags().IntP("port", "p", config.Get().Server.Port, "the port of server")
 }

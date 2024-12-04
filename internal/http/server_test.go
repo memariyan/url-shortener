@@ -14,10 +14,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/suite"
 	"url-shortner/internal/config"
-	mockconfig "url-shortner/mocks/config"
-
+	database2 "url-shortner/internal/database"
 	"url-shortner/internal/http/dto"
-	"url-shortner/mocks/database"
 )
 
 type UrlShortenerHandlerSuite struct {
@@ -36,9 +34,9 @@ func TestUrlShortenerHandlers(t *testing.T) {
 func (suite *UrlShortenerHandlerSuite) SetupTest() {
 	suite.server = httptest.NewServer(NewServer())
 	suite.client = suite.server.Client()
-	suite.sqlMock = database.MockDB()
-	suite.redisMock = database.MockRedis()
-	suite.config = mockconfig.MockConfig()
+	suite.sqlMock = database2.MockDB()
+	suite.redisMock = database2.MockRedis()
+	suite.config = config.MockConfig()
 }
 
 func (suite *UrlShortenerHandlerSuite) TestURLShortenerHandler_ConvertURL_Success() {

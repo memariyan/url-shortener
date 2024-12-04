@@ -10,11 +10,15 @@ import (
 	"url-shortner/internal/config"
 )
 
-var Redis *redis.Client
+var redisClient *redis.Client
+
+func GetRedis() *redis.Client {
+	return redisClient
+}
 
 func ConnectRedis(config *config.Redis) *redis.Client {
-	if Redis != nil {
-		return Redis
+	if redisClient != nil {
+		return redisClient
 	}
 	client := redis.NewClient(&redis.Options{
 		Addr:     config.Host + ":" + strconv.Itoa(config.Port),
@@ -25,7 +29,7 @@ func ConnectRedis(config *config.Redis) *redis.Client {
 	if err != nil {
 		log.Fatal("Error connecting to Redis:", err)
 	}
-	Redis = client
+	redisClient = client
 
-	return Redis
+	return redisClient
 }

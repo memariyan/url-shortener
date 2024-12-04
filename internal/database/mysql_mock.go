@@ -5,7 +5,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"url-shortner/internal/database"
 )
 
 func MockDB() sqlmock.Sqlmock {
@@ -17,6 +16,6 @@ func MockDB() sqlmock.Sqlmock {
 	if err != nil {
 		log.Fatal(err)
 	}
-	database.MySQL = db
+	mySQL = db
 	return sqlMock
 }

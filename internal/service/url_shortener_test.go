@@ -7,11 +7,10 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+	"url-shortner/internal/repository"
 
 	"url-shortner/internal/config"
 	"url-shortner/internal/model"
-	mockconfig "url-shortner/mocks/config"
-	"url-shortner/mocks/repository"
 )
 
 type UrlShortenerServiceSuite struct {
@@ -22,7 +21,7 @@ type UrlShortenerServiceSuite struct {
 
 func (suite *UrlShortenerServiceSuite) SetupTest() {
 	suite.repo = repository.URLDataRepositoryMock{}
-	suite.config = mockconfig.MockConfig()
+	suite.config = config.MockConfig()
 
 	repo = &suite.repo
 }

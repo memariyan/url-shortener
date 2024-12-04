@@ -23,7 +23,7 @@ type URLDataRepositoryImpl struct {
 var ctx = context.Background()
 
 func (r URLDataRepositoryImpl) Save(data *model.URLData) error {
-	err := database.MySQL.Save(data).Error
+	err := database.GetDB().Save(data).Error
 	if err != nil {
 		log.Errorln("error in storing in database:", err.Error())
 		return err
@@ -37,7 +37,7 @@ func (r URLDataRepositoryImpl) GetByKey(key string) *model.URLData {
 	if data = readFromCache(key); data != nil {
 		return data
 	}
-	if result := database.MySQL.First(&data, "`key` = ?", key); result != nil {
+	if result := database.GetDB().First(&data, "`key` = ?", key); result != nil {
 		writeOnCache(key, data)
 		return data
 	} else {
@@ -47,7 +47,7 @@ func (r URLDataRepositoryImpl) GetByKey(key string) *model.URLData {
 
 func readFromCache(key string) *model.URLData {
 	var result model.URLData
-	bytes, _ := database.Redis.Get(ctx, key).Bytes()
+	bytes, _ := database.GetRedis().Get(ctx, key).Bytes()
 	if err := result.UnmarshalBinary(bytes); err == nil {
 		return &result
 	}
@@ -56,14 +56,14 @@ func readFromCache(key string) *model.URLData {
 }
 
 func writeOnCache(key string, data *model.URLData) {
-	if err := database.Redis.Set(ctx, key, data, 0).Err(); err != nil {
+	if err := database.GetRedis().Set(ctx, key, data, 0).Err(); err != nil {
 		log.Errorln(err)
 	}
 }
 
 func (r URLDataRepositoryImpl) GetByOriginalUrl(originalUrl string) *model.URLData {
 	var data model.URLData
-	if result := database.MySQL.First(&data, "`original_url` = ?", originalUrl); result != nil {
+	if result := database.GetDB().First(&data, "`original_url` = ?", originalUrl); result != nil {
 		return &data
 	}
 

@@ -15,13 +15,13 @@ var migrateCmd = &cobra.Command{
 	Long:  `Initialize the database according to the sql script`,
 	Run: func(cmd *cobra.Command, args []string) {
 		config.ReadConfig()
-		database.ConnectDB(&config.Application.MySQL)
+		database.ConnectDB(&config.Get().MySQL)
 		sqlQuery, err := os.ReadFile("./scripts/init_db.sql")
 		if err != nil {
 			panic(err)
 		}
 
-		database.MySQL.Exec(string(sqlQuery))
+		database.GetDB().Exec(string(sqlQuery))
 		log.Infoln("database initialized successfully!")
 	},
 }

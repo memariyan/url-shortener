@@ -5,7 +5,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-var Application Config
+var configuration Config
+
+func Get() *Config {
+	return &configuration
+}
 
 type Config struct {
 	Server Server `mapstructure:"server"`
@@ -32,17 +36,17 @@ type Redis struct {
 }
 
 func ReadConfig() *Config {
-	Application = Config{}
+	configuration = Config{}
 	viper.SetConfigFile("config.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatal("Can't find the file .env : ", err)
 	}
 
-	err = viper.Unmarshal(&Application)
+	err = viper.Unmarshal(&configuration)
 	if err != nil {
 		log.Fatal("Environment can't be loaded: ", err)
 	}
 
-	return &Application
+	return &configuration
 }

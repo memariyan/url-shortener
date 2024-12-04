@@ -13,7 +13,7 @@ import (
 const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 var repo repository.URLDataRepository = repository.URLDataRepositoryImpl{}
-var configuration = &config.Application
+var configuration = config.Get()
 
 func ConvertURL(url string) (string, error) {
 	serverAddress := configuration.Server.Address + ":" + strconv.Itoa(configuration.Server.Port)
