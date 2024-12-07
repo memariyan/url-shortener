@@ -1,44 +1,36 @@
 package service
 
 import (
-	"math/rand"
 	"strconv"
-	"strings"
+
+	gonanoid "github.com/matoous/go-nanoid/v2"
+	log "github.com/sirupsen/logrus"
 
 	"url-shortner/internal/config"
 	"url-shortner/internal/model"
 	"url-shortner/internal/repository"
+	"url-shortner/internal/worker"
 )
 
-const Letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-var repo repository.URLDataRepository = repository.URLDataRepositoryImpl{}
-var configuration = config.Get()
-
 func ConvertURL(url string) (string, error) {
-	serverAddress := configuration.Server.Address + ":" + strconv.Itoa(configuration.Server.Port)
+	serverAddress := config.Get().Server.Address + ":" + strconv.Itoa(config.Get().Server.Port)
 	var data *model.URLData
 
-	data = repo.GetByOriginalUrl(url)
+	data = repository.Get().GetByOriginalUrl(url)
 	if len(data.Key) != 0 {
 		return serverAddress + "/" + data.Key, nil
 	}
 
-	newKey := generateRandStringBytes(6)
-	data = &model.URLData{OriginalUrl: url, Key: newKey}
-	err := repo.Save(data)
-	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			return ConvertURL(url)
-		}
+	if newKey, err := gonanoid.New(6); err != nil {
 		return "", err
+	} else {
+		save(url, newKey)
+		return serverAddress + "/" + newKey, nil
 	}
-
-	return serverAddress + "/" + newKey, nil
 }
 
 func GetOriginalURL(pathKey string) string {
-	data := repo.GetByKey(pathKey)
+	data := repository.Get().GetByKey(pathKey)
 	if data == nil {
 		return ""
 	}
@@ -46,11 +38,8 @@ func GetOriginalURL(pathKey string) string {
 	return data.OriginalUrl
 }
 
-func generateRandStringBytes(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = Letters[rand.Intn(len(Letters))]
-	}
-
-	return string(b)
+func save(url, newKey string) {
+	log.Infof("Saving URL: %s with Key: %s", url, newKey)
+	data := &model.URLData{OriginalUrl: url, Key: newKey}
+	worker.Get().Jobs <- data
 }

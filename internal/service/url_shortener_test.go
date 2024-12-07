@@ -1,13 +1,13 @@
 package service
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"url-shortner/internal/repository"
+	"url-shortner/internal/worker"
 
 	"url-shortner/internal/config"
 	"url-shortner/internal/model"
@@ -15,15 +15,14 @@ import (
 
 type UrlShortenerServiceSuite struct {
 	suite.Suite
-	repo   repository.URLDataRepositoryMock
+	repo   *repository.URLDataRepositoryMock
 	config *config.Config
 }
 
 func (suite *UrlShortenerServiceSuite) SetupTest() {
-	suite.repo = repository.URLDataRepositoryMock{}
 	suite.config = config.MockConfig()
-
-	repo = &suite.repo
+	suite.repo = repository.MockRepo()
+	worker.Get().Start()
 }
 
 func TestUrlShortenerService(t *testing.T) {
@@ -68,27 +67,4 @@ func (suite *UrlShortenerServiceSuite) TestUrlShortenerService_ConvertURL_URLAlr
 	key := strings.Split(strings.Replace(shortenedUrl, "http://", "", 1), "/")[1]
 	require.True(len(key) == expectedKeyLength)
 	require.Equal(expectedModel.Key, key)
-}
-
-func (suite *UrlShortenerServiceSuite) TestUrlShortenerService_ConvertURL_DuplicateKey_Success() {
-	require := suite.Require()
-	expectedKeyLength := 6
-	expectedDBCallCount := 2
-
-	// given->
-	url := "https://www.google.com"
-	suite.repo.On("GetByOriginalUrl", url).Return(&model.URLData{})
-	suite.repo.On("Save", mock.Anything).Once().Return(errors.New("Duplicate entry for column key"))
-	suite.repo.On("Save", mock.Anything).Once().Return(nil)
-
-	// when ->
-	shortenedUrl, err := ConvertURL(url)
-
-	// then->
-	require.NoError(err)
-	require.NotNil(shortenedUrl)
-	require.True(strings.Contains(shortenedUrl, suite.config.Server.Address))
-	key := strings.Split(strings.Replace(shortenedUrl, "http://", "", 1), "/")[1]
-	require.True(len(key) == expectedKeyLength)
-	suite.repo.AssertNumberOfCalls(suite.T(), "Save", expectedDBCallCount)
 }

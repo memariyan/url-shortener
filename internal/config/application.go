@@ -5,38 +5,46 @@ import (
 	"github.com/spf13/viper"
 )
 
-var configuration Config
+var configuration *Config
 
 func Get() *Config {
-	return &configuration
+	if configuration == nil {
+		configuration = ReadConfig()
+	}
+	return configuration
 }
 
 type Config struct {
-	Server Server `mapstructure:"server"`
-	MySQL  MySQL  `mapstructure:"mysql"`
-	Redis  Redis  `mapstructure:"redis"`
+	Server Server `yaml:"server"`
+	MySQL  MySQL  `yaml:"mysql"`
+	Redis  Redis  `yaml:"redis"`
+	Worker Worker `yaml:"worker"`
 }
 
 type Server struct {
-	Address string `mapstructure:"address"`
-	Port    int    `mapstructure:"port"`
+	Address string `yaml:"address"`
+	Port    int    `yaml:"port"`
 }
 
 type MySQL struct {
-	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	DB       string `mapstructure:"db"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	DB       string `yaml:"db"`
 }
 
 type Redis struct {
-	Host string `mapstructure:"host"`
-	Port int    `mapstructure:"port"`
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+}
+
+type Worker struct {
+	Size int `yaml:"size"`
 }
 
 func ReadConfig() *Config {
-	configuration = Config{}
+	configuration = &Config{}
 	viper.SetConfigFile("config.yaml")
 	err := viper.ReadInConfig()
 	if err != nil {
@@ -48,5 +56,5 @@ func ReadConfig() *Config {
 		log.Fatal("Environment can't be loaded: ", err)
 	}
 
-	return &configuration
+	return configuration
 }

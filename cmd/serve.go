@@ -7,6 +7,7 @@ import (
 	"url-shortner/internal/config"
 	"url-shortner/internal/database"
 	"url-shortner/internal/http"
+	"url-shortner/internal/worker"
 )
 
 var rootCmd = &cobra.Command{
@@ -19,18 +20,24 @@ var serveCmd = &cobra.Command{
 	Short: "run",
 	Long:  `Run the server on the defined port`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config.ReadConfig()
-		database.ConnectDB(&config.Get().MySQL)
-		database.ConnectRedis(&config.Get().Redis)
-
-		// run the server
-		port, _ := rootCmd.Flags().GetInt("port")
-		e := http.NewServer()
-		err := e.Start(":" + strconv.Itoa(port))
-		e.Logger.Fatal(err)
+		startApplication()
 	},
 }
 
 func init() {
 	rootCmd.PersistentFlags().IntP("port", "p", config.Get().Server.Port, "the port of server")
+}
+
+func startApplication() {
+	config.ReadConfig()
+	database.ConnectDB(&config.Get().MySQL)
+	database.ConnectRedis(&config.Get().Redis)
+	worker.Get().Start()
+	defer worker.Get().Stop()
+
+	// run the server
+	port, _ := rootCmd.Flags().GetInt("port")
+	e := http.NewServer()
+	err := e.Start(":" + strconv.Itoa(port))
+	e.Logger.Fatal(err)
 }

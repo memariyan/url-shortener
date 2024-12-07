@@ -20,7 +20,12 @@ type URLDataRepository interface {
 type URLDataRepositoryImpl struct {
 }
 
+var instance URLDataRepository = &URLDataRepositoryImpl{}
 var ctx = context.Background()
+
+func Get() URLDataRepository {
+	return instance
+}
 
 func (r URLDataRepositoryImpl) Save(data *model.URLData) error {
 	err := database.GetDB().Save(data).Error

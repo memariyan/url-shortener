@@ -21,3 +21,9 @@ func (m *URLDataRepositoryMock) GetByKey(key string) *model.URLData {
 func (m *URLDataRepositoryMock) GetByOriginalUrl(originalUrl string) *model.URLData {
 	return m.Called(originalUrl).Get(0).(*model.URLData)
 }
+
+func MockRepo() *URLDataRepositoryMock {
+	mockRepo := &URLDataRepositoryMock{}
+	instance = mockRepo
+	return mockRepo
+}
