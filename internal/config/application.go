@@ -19,6 +19,7 @@ type Config struct {
 	MySQL  MySQL  `yaml:"mysql"`
 	Redis  Redis  `yaml:"redis"`
 	Worker Worker `yaml:"worker"`
+	Jaeger Jaeger `yaml:"jaeger"`
 }
 
 type Server struct {
@@ -35,6 +36,11 @@ type MySQL struct {
 }
 
 type Redis struct {
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
+}
+
+type Jaeger struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
 }

@@ -3,15 +3,19 @@ server:
   port:  8001
 
 mysql:
-  host: "localhost"
+  host: "mysql"
   port: 3306
   username: "root"
   password: "root"
   db: "url_shortener"
 
 redis:
-  host: "localhost"
+  host: "redis"
   port: 6379
+
+jaeger:
+  host: "jaeger"
+  port: 4318
 
 worker:
   size: 10

@@ -64,20 +64,33 @@ services:
     networks:
       - redis
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.56
+    environment:
+      COLLECTOR_ZIPKIN_HOST_PORT: 9411
+    ports:
+      - "16686:16686"
+      - "4318:4318"
+    networks:
+      - jaeger
+
   url-shortener:
     image: url-shortener:latest
     depends_on:
       - mysql
       - redis
+      - jaeger
     ports:
       - "8001:8001"
     networks:
       - url-shortener
       - mysql
       - redis
+      - jaeger
 
 networks:
   url-shortener: {}
   mysql: {}
   prometheus: {}
   redis: {}
+  jaeger: {}

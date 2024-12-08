@@ -7,6 +7,7 @@ import (
 	"url-shortner/internal/config"
 	"url-shortner/internal/database"
 	"url-shortner/internal/http"
+	"url-shortner/internal/tracing"
 	"url-shortner/internal/worker"
 )
 
@@ -29,9 +30,11 @@ func init() {
 }
 
 func startApplication() {
+
 	config.ReadConfig()
 	database.ConnectDB(&config.Get().MySQL)
 	database.ConnectRedis(&config.Get().Redis)
+	tracing.Start()
 	worker.Get().Start()
 	defer worker.Get().Stop()
 

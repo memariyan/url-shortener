@@ -5,12 +5,17 @@ import (
 
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/otel"
 
 	"url-shortner/internal/http/dto"
 	"url-shortner/internal/service"
 )
 
 func Convert(c echo.Context) error {
+
+	_, span := otel.Tracer("url-shortener").Start(c.Request().Context(), "Convert")
+	defer span.End()
+
 	request, err := getRequestInfo(c)
 	if err != nil {
 		log.Errorln("Failed parse the request body ", err)

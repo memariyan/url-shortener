@@ -5,7 +5,6 @@ import (
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	log "github.com/sirupsen/logrus"
-
 	"url-shortner/internal/config"
 	"url-shortner/internal/model"
 	"url-shortner/internal/repository"
