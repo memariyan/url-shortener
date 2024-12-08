@@ -75,7 +75,9 @@ services:
       - jaeger
 
   url-shortener:
-    image: url-shortener:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
     depends_on:
       - mysql
       - redis
