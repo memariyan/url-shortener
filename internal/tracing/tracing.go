@@ -17,7 +17,7 @@ import (
 )
 
 func startTracing() (*trace.TracerProvider, error) {
-	var jaegerConfig = config.Get().Jaeger
+	var jaegerConfig = config.App().Jaeger
 	exporter, err := otlptrace.New(
 		context.Background(),
 		otlptracehttp.NewClient(

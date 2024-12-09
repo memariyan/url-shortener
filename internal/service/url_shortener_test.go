@@ -22,7 +22,7 @@ type UrlShortenerServiceSuite struct {
 func (suite *UrlShortenerServiceSuite) SetupTest() {
 	suite.config = config.MockConfig()
 	suite.repo = repository.MockRepo()
-	worker.Get().Start()
+	worker.SaveWorker().Start()
 }
 
 func TestUrlShortenerService(t *testing.T) {

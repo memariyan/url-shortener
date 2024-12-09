@@ -6,7 +6,7 @@ import (
 	"url-shortner/internal/http/middleware"
 )
 
-func NewServer() *echo.Echo {
+func NewHttpServer() *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.TracingMiddleware)
 

@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func MockDB() sqlmock.Sqlmock {
+func MockMySQL() sqlmock.Sqlmock {
 	mockDB, sqlMock, err := sqlmock.New()
 	if err != nil {
 		log.Fatal(err)

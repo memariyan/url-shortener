@@ -12,7 +12,7 @@ import (
 
 var redisClient *redis.Client
 
-func GetRedis() *redis.Client {
+func Redis() *redis.Client {
 	return redisClient
 }
 

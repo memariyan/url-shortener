@@ -7,9 +7,9 @@ import (
 
 var configuration *Config
 
-func Get() *Config {
+func App() *Config {
 	if configuration == nil {
-		configuration = ReadConfig()
+		configuration = readConfig()
 	}
 	return configuration
 }
@@ -49,7 +49,7 @@ type Worker struct {
 	Size int `yaml:"size"`
 }
 
-func ReadConfig() *Config {
+func readConfig() *Config {
 	configuration = &Config{}
 	viper.SetConfigFile("config.yaml")
 	err := viper.ReadInConfig()

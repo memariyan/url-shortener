@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
+
 	"url-shortner/internal/config"
 	"url-shortner/internal/database"
 	"url-shortner/internal/http"
@@ -26,21 +27,19 @@ var serveCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().IntP("port", "p", config.Get().Server.Port, "the port of server")
+	rootCmd.PersistentFlags().IntP("port", "p", config.App().Server.Port, "the port of server")
 }
 
 func startApplication() {
-
-	config.ReadConfig()
-	database.ConnectDB(&config.Get().MySQL)
-	database.ConnectRedis(&config.Get().Redis)
+	database.ConnectDB(&config.App().MySQL)
+	database.ConnectRedis(&config.App().Redis)
 	tracing.Start()
-	worker.Get().Start()
-	defer worker.Get().Stop()
+	worker.SaveWorker().Start()
+	defer worker.SaveWorker().Stop()
 
 	// run the server
 	port, _ := rootCmd.Flags().GetInt("port")
-	e := http.NewServer()
+	e := http.NewHttpServer()
 	err := e.Start(":" + strconv.Itoa(port))
 	e.Logger.Fatal(err)
 }

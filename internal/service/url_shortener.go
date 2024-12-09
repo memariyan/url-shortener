@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	gonanoid "github.com/matoous/go-nanoid/v2"
+
 	log "github.com/sirupsen/logrus"
 	"url-shortner/internal/config"
 	"url-shortner/internal/model"
@@ -12,10 +13,10 @@ import (
 )
 
 func ConvertURL(url string) (string, error) {
-	serverAddress := config.Get().Server.Address + ":" + strconv.Itoa(config.Get().Server.Port)
+	serverAddress := config.App().Server.Address + ":" + strconv.Itoa(config.App().Server.Port)
 	var data *model.URLData
 
-	data = repository.Get().GetByOriginalUrl(url)
+	data = repository.URLData().GetByOriginalUrl(url)
 	if len(data.Key) != 0 {
 		return serverAddress + "/" + data.Key, nil
 	}
@@ -29,7 +30,7 @@ func ConvertURL(url string) (string, error) {
 }
 
 func GetOriginalURL(pathKey string) string {
-	data := repository.Get().GetByKey(pathKey)
+	data := repository.URLData().GetByKey(pathKey)
 	if data == nil {
 		return ""
 	}
@@ -40,5 +41,5 @@ func GetOriginalURL(pathKey string) string {
 func save(url, newKey string) {
 	log.Infof("Saving URL: %s with Key: %s", url, newKey)
 	data := &model.URLData{OriginalUrl: url, Key: newKey}
-	worker.Get().Jobs <- data
+	worker.SaveWorker().Jobs <- data
 }

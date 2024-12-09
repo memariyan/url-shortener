@@ -33,12 +33,12 @@ func TestUrlShortenerHandlers(t *testing.T) {
 }
 
 func (suite *UrlShortenerHandlerSuite) SetupTest() {
-	suite.server = httptest.NewServer(NewServer())
+	suite.server = httptest.NewServer(NewHttpServer())
 	suite.client = suite.server.Client()
-	suite.sqlMock = database.MockDB()
+	suite.sqlMock = database.MockMySQL()
 	suite.redisMock = database.MockRedis()
 	suite.config = config.MockConfig()
-	worker.Get().Start()
+	worker.SaveWorker().Start()
 }
 
 func (suite *UrlShortenerHandlerSuite) TestURLShortenerHandler_ConvertURL_Success() {

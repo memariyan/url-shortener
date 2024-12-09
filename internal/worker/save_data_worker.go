@@ -18,12 +18,12 @@ type SaveWorkerPool struct {
 
 var instance *SaveWorkerPool
 
-func Get() *SaveWorkerPool {
+func SaveWorker() *SaveWorkerPool {
 	if instance == nil {
 		bufferSize := 100
 		instance = &SaveWorkerPool{
 			Jobs:     make(chan *model.URLData, bufferSize),
-			poolSize: config.Get().Worker.Size,
+			poolSize: config.App().Worker.Size,
 		}
 	}
 	return instance
@@ -48,7 +48,7 @@ func (w *SaveWorkerPool) Stop() {
 func (w *SaveWorkerPool) worker(number int) {
 	for urlData := range w.Jobs {
 		w.wg.Add(1)
-		err := repository.Get().Save(urlData)
+		err := repository.URLData().Save(urlData)
 		if err != nil {
 			log.Errorf("Worker #%d failed to save data: %s", number, err.Error())
 		}

@@ -11,7 +11,7 @@ import (
 
 var mySQL *gorm.DB
 
-func GetDB() *gorm.DB {
+func MySQL() *gorm.DB {
 	return mySQL
 }
 
