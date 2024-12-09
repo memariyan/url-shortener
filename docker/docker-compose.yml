@@ -20,8 +20,6 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    depends_on:
-      - url-shortener
     volumes:
       - ${CONFIG_FOLDER}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:

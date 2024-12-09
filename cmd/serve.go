@@ -36,6 +36,7 @@ func startApplication() {
 	tracing.Start()
 	worker.SaveWorker().Start()
 	defer worker.SaveWorker().Stop()
+	InitDBIfNeed()
 
 	// run the server
 	port, _ := rootCmd.Flags().GetInt("port")
